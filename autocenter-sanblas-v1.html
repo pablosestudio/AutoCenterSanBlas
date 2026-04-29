@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Auto Center San Blas · Alicante</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,700;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --black: #0a0a0a;
+    --dark: #111111;
+    --card: #161616;
+    --red: #e8001d;
+    --red-dark: #b30016;
+    --white: #f5f0eb;
+    --gray: #888;
+    --border: #2a2a2a;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--black);
+    color: var(--white);
+    font-family: 'DM Sans', sans-serif;
+    overflow-x: hidden;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1.2rem 4rem;
+    background: rgba(10,10,10,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.8rem;
+    letter-spacing: 2px;
+    color: var(--white);
+    text-decoration: none;
+    display: flex; align-items: center; gap: 0.6rem;
+  }
+  .nav-logo span { color: var(--red); }
+  .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+  .nav-links a {
+    color: var(--gray);
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 500;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--white); }
+  .nav-cta {
+    background: var(--red);
+    color: var(--white) !important;
+    padding: 0.6rem 1.4rem;
+    border-radius: 2px;
+    font-weight: 700 !important;
+  }
+  .nav-cta:hover { background: var(--red-dark); color: var(--white) !important; }
+  .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; }
+  .hamburger span { display: block; width: 24px; height: 2px; background: var(--white); }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    position: relative;
+    display: flex; align-items: center;
+    overflow: hidden;
+  }
+  .hero-bg {
+    position: absolute; inset: 0;
+    background-image: url('https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?w=1600&q=80');
+    background-size: cover; background-position: center;
+    filter: brightness(0.25);
+  }
+  .hero-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(135deg, rgba(10,10,10,0.9) 40%, rgba(232,0,29,0.08) 100%);
+  }
+  .hero-content {
+    position: relative; z-index: 2;
+    padding: 0 4rem; max-width: 800px;
+    animation: fadeUp 0.9s ease both;
+  }
+  .hero-eyebrow {
+    font-size: 0.8rem; font-weight: 500;
+    letter-spacing: 4px; text-transform: uppercase;
+    color: var(--red); margin-bottom: 1.2rem;
+    display: flex; align-items: center; gap: 1rem;
+  }
+  .hero-eyebrow::before {
+    content: ''; display: block;
+    width: 40px; height: 1px; background: var(--red);
+  }
+  .hero h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(4rem, 10vw, 9rem);
+    line-height: 0.95;
+    letter-spacing: -1px;
+    margin-bottom: 1.5rem;
+  }
+  .hero h1 span { color: var(--red); }
+  .hero p {
+    font-size: 1.05rem; color: #aaa;
+    line-height: 1.7; max-width: 480px;
+    margin-bottom: 2.5rem;
+    font-weight: 300;
+  }
+  .hero-btns { display: flex; gap: 1rem; flex-wrap: wrap; }
+  .btn-primary {
+    background: var(--red); color: var(--white);
+    padding: 1rem 2.2rem; border: none;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem; font-weight: 700;
+    letter-spacing: 1px; text-transform: uppercase;
+    text-decoration: none; cursor: pointer;
+    transition: background 0.2s, transform 0.2s;
+    border-radius: 2px;
+  }
+  .btn-primary:hover { background: var(--red-dark); transform: translateY(-2px); }
+  .btn-outline {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--white);
+    padding: 1rem 2.2rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem; font-weight: 500;
+    letter-spacing: 1px; text-transform: uppercase;
+    text-decoration: none; cursor: pointer;
+    transition: border-color 0.2s, color 0.2s;
+    border-radius: 2px;
+  }
+  .btn-outline:hover { border-color: var(--white); }
+  .hero-scroll {
+    position: absolute; bottom: 2.5rem; left: 50%;
+    transform: translateX(-50%);
+    display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
+    color: var(--gray); font-size: 0.75rem; letter-spacing: 2px;
+    text-transform: uppercase; animation: bounce 2s infinite;
+  }
+  .hero-scroll::after {
+    content: ''; width: 1px; height: 40px; background: var(--red);
+  }
+
+  /* STATS BAR */
+  .stats-bar {
+    background: var(--red);
+    display: grid; grid-template-columns: repeat(4, 1fr);
+  }
+  .stat-item {
+    padding: 1.5rem 2rem;
+    border-right: 1px solid rgba(255,255,255,0.15);
+    text-align: center;
+  }
+  .stat-item:last-child { border-right: none; }
+  .stat-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2.2rem; letter-spacing: 1px;
+  }
+  .stat-label {
+    font-size: 0.75rem; font-weight: 500;
+    letter-spacing: 1px; text-transform: uppercase;
+    opacity: 0.85;
+  }
+
+  /* SECTION BASE */
+  section { padding: 6rem 4rem; }
+  .section-tag {
+    font-size: 0.75rem; font-weight: 700;
+    letter-spacing: 4px; text-transform: uppercase;
+    color: var(--red); margin-bottom: 0.8rem;
+  }
+  .section-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(2.5rem, 5vw, 4.5rem);
+    line-height: 1; letter-spacing: 1px;
+    margin-bottom: 1rem;
+  }
+  .section-sub {
+    color: var(--gray); font-size: 1rem;
+    line-height: 1.7; max-width: 520px;
+    font-weight: 300;
+  }
+
+  /* SERVICIOS */
+  #servicios { background: var(--dark); }
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1px; margin-top: 3.5rem;
+    border: 1px solid var(--border);
+  }
+  .service-card {
+    background: var(--card);
+    padding: 2.2rem;
+    border-right: 1px solid var(--border);
+    transition: background 0.25s;
+    position: relative; overflow: hidden;
+  }
+  .service-card::before {
+    content: ''; position: absolute;
+    top: 0; left: 0; right: 0; height: 3px;
+    background: var(--red);
+    transform: scaleX(0); transform-origin: left;
+    transition: transform 0.3s;
+  }
+  .service-card:hover::before { transform: scaleX(1); }
+  .service-card:hover { background: #1a1a1a; }
+  .service-icon {
+    width: 48px; height: 48px;
+    background: rgba(232,0,29,0.1);
+    border-radius: 4px;
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 1.5rem; font-size: 1.5rem;
+  }
+  .service-card h3 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.5rem; letter-spacing: 1px;
+    margin-bottom: 0.8rem;
+  }
+  .service-card p { color: var(--gray); font-size: 0.9rem; line-height: 1.6; font-weight: 300; }
+
+  /* ABOUT */
+  #nosotros {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 5rem;
+    align-items: center;
+  }
+  .about-img-wrap {
+    position: relative;
+    aspect-ratio: 4/5; overflow: hidden;
+  }
+  .about-img-wrap img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    filter: grayscale(20%) contrast(1.05);
+    transition: transform 0.5s;
+  }
+  .about-img-wrap:hover img { transform: scale(1.03); }
+  .about-img-wrap::after {
+    content: ''; position: absolute;
+    bottom: -1rem; right: -1rem;
+    width: 60%; height: 60%;
+    border: 2px solid var(--red);
+    z-index: -1;
+  }
+  .about-badge {
+    position: absolute; bottom: 1.5rem; left: 1.5rem;
+    background: var(--red);
+    padding: 1rem 1.5rem;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1rem; letter-spacing: 2px;
+  }
+  .about-text .section-sub { max-width: 100%; }
+  .about-list { margin-top: 2rem; display: flex; flex-direction: column; gap: 0.8rem; }
+  .about-list li {
+    display: flex; align-items: center; gap: 1rem;
+    font-size: 0.95rem; color: #ccc;
+  }
+  .about-list li::before {
+    content: ''; width: 20px; height: 2px;
+    background: var(--red); flex-shrink: 0;
+  }
+
+  /* GALLERY */
+  #galeria { background: var(--dark); }
+  .gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: auto auto;
+    gap: 1rem; margin-top: 3rem;
+  }
+  .gallery-item {
+    overflow: hidden; position: relative;
+    cursor: pointer;
+  }
+  .gallery-item:first-child {
+    grid-column: span 2; grid-row: span 2;
+  }
+  .gallery-item img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s, filter 0.3s;
+    aspect-ratio: 16/10;
+    display: block;
+  }
+  .gallery-item:first-child img { aspect-ratio: unset; height: 100%; }
+  .gallery-item:hover img { transform: scale(1.06); filter: brightness(0.8); }
+  .gallery-overlay {
+    position: absolute; inset: 0;
+    background: rgba(232,0,29,0);
+    transition: background 0.3s;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .gallery-item:hover .gallery-overlay { background: rgba(232,0,29,0.15); }
+
+  /* CONTACTO */
+  #contacto {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 5rem;
+    align-items: start;
+  }
+  .contact-info h2.section-title { margin-bottom: 1.5rem; }
+  .contact-details { margin-top: 2.5rem; display: flex; flex-direction: column; gap: 1.5rem; }
+  .contact-item { display: flex; gap: 1.2rem; align-items: flex-start; }
+  .contact-icon {
+    width: 40px; height: 40px; border-radius: 2px;
+    background: rgba(232,0,29,0.1);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.1rem; flex-shrink: 0; margin-top: 2px;
+  }
+  .contact-item strong { display: block; font-weight: 700; margin-bottom: 0.2rem; }
+  .contact-item span { color: var(--gray); font-size: 0.9rem; }
+  .contact-item a { color: var(--gray); text-decoration: none; }
+  .contact-item a:hover { color: var(--red); }
+  .contact-form { display: flex; flex-direction: column; gap: 1rem; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .form-group { display: flex; flex-direction: column; gap: 0.4rem; }
+  .form-group label { font-size: 0.8rem; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: var(--gray); }
+  .form-group input, .form-group select, .form-group textarea {
+    background: var(--card);
+    border: 1px solid var(--border);
+    color: var(--white);
+    padding: 0.85rem 1rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem;
+    outline: none; border-radius: 2px;
+    transition: border-color 0.2s;
+  }
+  .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+    border-color: var(--red);
+  }
+  .form-group textarea { resize: vertical; min-height: 120px; }
+  .form-group select option { background: var(--card); }
+
+  /* MAP */
+  .map-wrap {
+    margin-top: 1.5rem;
+    border: 1px solid var(--border);
+    overflow: hidden;
+    height: 200px;
+  }
+  .map-wrap iframe { width: 100%; height: 100%; border: none; filter: grayscale(100%) invert(90%); }
+
+  /* FOOTER */
+  footer {
+    background: var(--dark);
+    border-top: 1px solid var(--border);
+    padding: 3rem 4rem 2rem;
+  }
+  .footer-top {
+    display: flex; justify-content: space-between; align-items: center;
+    padding-bottom: 2rem; border-bottom: 1px solid var(--border);
+    flex-wrap: wrap; gap: 1.5rem;
+  }
+  .footer-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2rem; letter-spacing: 2px;
+    text-decoration: none; color: var(--white);
+  }
+  .footer-logo span { color: var(--red); }
+  .footer-nav { display: flex; gap: 2rem; flex-wrap: wrap; }
+  .footer-nav a { color: var(--gray); text-decoration: none; font-size: 0.85rem; transition: color 0.2s; }
+  .footer-nav a:hover { color: var(--white); }
+  .footer-bottom {
+    padding-top: 1.5rem;
+    display: flex; justify-content: space-between; align-items: center;
+    color: var(--gray); font-size: 0.8rem; flex-wrap: wrap; gap: 0.5rem;
+  }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes bounce {
+    0%, 100% { transform: translateX(-50%) translateY(0); }
+    50% { transform: translateX(-50%) translateY(-8px); }
+  }
+  .reveal {
+    opacity: 0; transform: translateY(40px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  /* RESPONSIVE */
+  @media (max-width: 900px) {
+    nav { padding: 1rem 1.5rem; }
+    .nav-links { display: none; }
+    .hamburger { display: flex; }
+    section { padding: 4rem 1.5rem; }
+    .hero-content { padding: 0 1.5rem; }
+    .stats-bar { grid-template-columns: repeat(2, 1fr); }
+    .stat-item { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.15); }
+    #nosotros { grid-template-columns: 1fr; gap: 3rem; }
+    .about-img-wrap::after { display: none; }
+    #contacto { grid-template-columns: 1fr; gap: 3rem; }
+    .gallery-grid { grid-template-columns: 1fr 1fr; }
+    .gallery-item:first-child { grid-column: span 2; grid-row: span 1; }
+    .form-row { grid-template-columns: 1fr; }
+    footer { padding: 2rem 1.5rem 1.5rem; }
+    .footer-top { flex-direction: column; align-items: flex-start; }
+  }
+  @media (max-width: 500px) {
+    .gallery-grid { grid-template-columns: 1fr; }
+    .gallery-item:first-child { grid-column: span 1; }
+    .hero h1 { font-size: 3.5rem; }
+  }
+
+  /* MOBILE NAV */
+  .mobile-menu {
+    display: none; position: fixed; inset: 0; z-index: 99;
+    background: var(--black);
+    flex-direction: column; align-items: center; justify-content: center;
+    gap: 2rem;
+  }
+  .mobile-menu.open { display: flex; }
+  .mobile-menu a {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2.5rem; letter-spacing: 3px;
+    color: var(--white); text-decoration: none;
+    transition: color 0.2s;
+  }
+  .mobile-menu a:hover { color: var(--red); }
+  .mobile-close {
+    position: absolute; top: 1.5rem; right: 1.5rem;
+    font-size: 2rem; cursor: pointer; color: var(--white);
+    background: none; border: none;
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="#"><span>AUTO</span> CENTER SAN BLAS</a>
+  <ul class="nav-links">
+    <li><a href="#servicios">Servicios</a></li>
+    <li><a href="#nosotros">Nosotros</a></li>
+    <li><a href="#galeria">Galería</a></li>
+    <li><a href="#contacto" class="nav-cta">Pedir Cita</a></li>
+  </ul>
+  <div class="hamburger" onclick="openMenu()">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+<!-- MOBILE MENU -->
+<div class="mobile-menu" id="mobileMenu">
+  <button class="mobile-close" onclick="closeMenu()">✕</button>
+  <a href="#servicios" onclick="closeMenu()">Servicios</a>
+  <a href="#nosotros" onclick="closeMenu()">Nosotros</a>
+  <a href="#galeria" onclick="closeMenu()">Galería</a>
+  <a href="#contacto" onclick="closeMenu()">Pedir Cita</a>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <div class="hero-eyebrow">Alicante · Desde 2005</div>
+    <h1>Tu coche,<br>nuestro<br><span>compromiso</span></h1>
+    <p>Taller multimarca de confianza en el corazón de Alicante. Mecánica general, neumáticos, electricidad y mucho más. Presupuesto sin compromiso.</p>
+    <div class="hero-btns">
+      <a href="#contacto" class="btn-primary">Pedir Cita Ahora</a>
+      <a href="#servicios" class="btn-outline">Ver Servicios</a>
+    </div>
+  </div>
+  <div class="hero-scroll">Scroll</div>
+</section>
+
+<!-- STATS -->
+<div class="stats-bar">
+  <div class="stat-item">
+    <div class="stat-num">+20</div>
+    <div class="stat-label">Años de experiencia</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-num">+5K</div>
+    <div class="stat-label">Clientes satisfechos</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-num">100%</div>
+    <div class="stat-label">Presupuesto gratis</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-num">966 083 978</div>
+    <div class="stat-label">Llámanos ahora</div>
+  </div>
+</div>
+
+<!-- SERVICIOS -->
+<section id="servicios">
+  <div class="reveal">
+    <div class="section-tag">Lo que hacemos</div>
+    <h2 class="section-title">Nuestros<br>Servicios</h2>
+    <p class="section-sub">Especialistas en todo tipo de vehículos — coches, camiones y motos. Trabajamos con las mejores marcas.</p>
+  </div>
+  <div class="services-grid reveal">
+    <div class="service-card">
+      <div class="service-icon">🔧</div>
+      <h3>Mecánica General</h3>
+      <p>Diagnóstico y reparación de motor, transmisión, embrague y distribución. Trabajo preciso y garantizado.</p>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">⚡</div>
+      <h3>Mecánica Rápida</h3>
+      <p>Cambio de aceite, filtros, pastillas de freno y más. Servicio express sin cita previa.</p>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">🛞</div>
+      <h3>Neumáticos</h3>
+      <p>Venta, montaje, equilibrado y alineación de ruedas. Todas las marcas al mejor precio.</p>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">🔋</div>
+      <h3>Electricidad</h3>
+      <p>Diagnosis electrónica multimarca, baterías, alternadores y sistemas de encendido.</p>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">📋</div>
+      <h3>Revisión Pre-ITV</h3>
+      <p>Revisamos tu vehículo antes de la ITV para que lo pase sin problemas. Garantía total.</p>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">🔩</div>
+      <h3>Suspensiones</h3>
+      <p>Amortiguadores, rótulas, muelles y geometría. Tu seguridad es nuestra prioridad.</p>
+    </div>
+  </div>
+</section>
+
+<!-- NOSOTROS -->
+<section id="nosotros">
+  <div class="about-img-wrap reveal">
+    <img src="https://images.unsplash.com/photo-1530046339160-ce3e530c7d2f?w=800&q=80" alt="Mecánicos trabajando en Auto Center San Blas">
+    <div class="about-badge">Multimarca · Multimarca</div>
+  </div>
+  <div class="about-text reveal">
+    <div class="section-tag">Quiénes somos</div>
+    <h2 class="section-title">Profesionales<br>de confianza</h2>
+    <p class="section-sub">En Auto Center San Blas llevamos más de 20 años cuidando los vehículos de Alicante. Nuestro equipo de mecánicos certificados trabaja con las últimas tecnologías de diagnóstico para ofrecerte el mejor servicio al precio más competitivo.</p>
+    <ul class="about-list">
+      <li>Mecánicos certificados y en formación continua</li>
+      <li>Equipos de diagnóstico de última generación</li>
+      <li>Recambios originales y de primera calidad</li>
+      <li>Presupuesto sin compromiso siempre</li>
+      <li>Vehículo de sustitución disponible</li>
+      <li>Trabajamos con todas las marcas</li>
+    </ul>
+    <br>
+    <a href="tel:966083978" class="btn-primary" style="display:inline-block;">Llamar ahora · 966 08 39 78</a>
+  </div>
+</section>
+
+<!-- GALLERY -->
+<section id="galeria" style="background:var(--dark);">
+  <div class="reveal">
+    <div class="section-tag">Nuestro taller</div>
+    <h2 class="section-title">Instalaciones<br>de primer nivel</h2>
+  </div>
+  <div class="gallery-grid reveal">
+    <div class="gallery-item">
+      <img src="https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?w=1200&q=80" alt="Interior taller mecánico">
+      <div class="gallery-overlay"></div>
+    </div>
+    <div class="gallery-item">
+      <img src="https://images.unsplash.com/photo-1609630875171-b1321377ee65?w=800&q=80" alt="Diagnóstico electrónico">
+      <div class="gallery-overlay"></div>
+    </div>
+    <div class="gallery-item">
+      <img src="https://images.unsplash.com/photo-1563720223185-11003d516935?w=800&q=80" alt="Mecánico trabajando">
+      <div class="gallery-overlay"></div>
+    </div>
+    <div class="gallery-item">
+      <img src="https://images.unsplash.com/photo-1625047509248-ec889cbff17f?w=800&q=80" alt="Neumáticos">
+      <div class="gallery-overlay"></div>
+    </div>
+    <div class="gallery-item">
+      <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&q=80" alt="Motor de coche">
+      <div class="gallery-overlay"></div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACTO -->
+<section id="contacto">
+  <div class="contact-info reveal">
+    <div class="section-tag">Contáctanos</div>
+    <h2 class="section-title">Pide tu cita<br>hoy mismo</h2>
+    <p class="section-sub">Estamos en el corazón de Alicante, listos para ayudarte. Sin esperas, sin sorpresas.</p>
+    <div class="contact-details">
+      <div class="contact-item">
+        <div class="contact-icon">📍</div>
+        <div>
+          <strong>Dirección</strong>
+          <span>C/ Santo Domingo, 44, 03005 Alicante</span>
+        </div>
+      </div>
+      <div class="contact-item">
+        <div class="contact-icon">📞</div>
+        <div>
+          <strong>Teléfono</strong>
+          <a href="tel:966083978"><span>966 08 39 78</span></a>
+        </div>
+      </div>
+      <div class="contact-item">
+        <div class="contact-icon">🕐</div>
+        <div>
+          <strong>Horario</strong>
+          <span>Lun–Vie: 8:30–13:30 / 15:30–19:30<br>Sáb: 9:00–13:00</span>
+        </div>
+      </div>
+    </div>
+    <div class="map-wrap">
+      <iframe
+        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3126.7!2d-0.4814!3d38.3456!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xd6234e0c3e4b52d%3A0x0!2sCalle+Santo+Domingo+44%2C+Alicante!5e0!3m2!1ses!2ses!4v1"
+        allowfullscreen="" loading="lazy"></iframe>
+    </div>
+  </div>
+  <div class="reveal">
+    <form class="contact-form" onsubmit="handleSubmit(event)">
+      <div class="form-row">
+        <div class="form-group">
+          <label>Nombre</label>
+          <input type="text" placeholder="Tu nombre" required>
+        </div>
+        <div class="form-group">
+          <label>Teléfono</label>
+          <input type="tel" placeholder="600 000 000" required>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Servicio</label>
+        <select required>
+          <option value="">Selecciona un servicio</option>
+          <option>Mecánica General</option>
+          <option>Mecánica Rápida</option>
+          <option>Neumáticos</option>
+          <option>Electricidad</option>
+          <option>Revisión Pre-ITV</option>
+          <option>Suspensiones</option>
+          <option>Otro</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Vehículo (marca y modelo)</label>
+        <input type="text" placeholder="Ej: Seat León 1.6 TDI 2019">
+      </div>
+      <div class="form-group">
+        <label>Descripción del problema</label>
+        <textarea placeholder="Cuéntanos qué le pasa a tu coche..."></textarea>
+      </div>
+      <button type="submit" class="btn-primary" style="width:100%; padding: 1.2rem;">Enviar Solicitud de Cita</button>
+    </form>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-top">
+    <a class="footer-logo" href="#"><span>AUTO</span> CENTER SAN BLAS</a>
+    <nav class="footer-nav">
+      <a href="#servicios">Servicios</a>
+      <a href="#nosotros">Nosotros</a>
+      <a href="#galeria">Galería</a>
+      <a href="#contacto">Contacto</a>
+    </nav>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2025 Auto Center San Blas · C/ Santo Domingo 44, Alicante</span>
+    <span>Diseñado con ❤️ en Alicante</span>
+  </div>
+</footer>
+
+<script>
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(el => {
+      if (el.isIntersecting) { el.target.classList.add('visible'); }
+    });
+  }, { threshold: 0.1 });
+  reveals.forEach(r => observer.observe(r));
+
+  // Mobile menu
+  function openMenu() { document.getElementById('mobileMenu').classList.add('open'); }
+  function closeMenu() { document.getElementById('mobileMenu').classList.remove('open'); }
+
+  // Form submit
+  function handleSubmit(e) {
+    e.preventDefault();
+    const btn = e.target.querySelector('button');
+    btn.textContent = '✓ Solicitud enviada — Te llamamos pronto';
+    btn.style.background = '#1a7a3c';
+    btn.disabled = true;
+  }
+</script>
+</body>
+</html>
